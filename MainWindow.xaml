@@ -1,0 +1,70 @@
+﻿<Window x:Class="FureaiReminder.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:FureaiReminder" 
+        xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+        mc:Ignorable="d"
+        ResizeMode="NoResize"
+        SizeToContent="WidthAndHeight"
+        Style="{StaticResource MaterialDesignWindow}"
+        Icon="/Resources/bell.ico"
+        Title="ふれあいリマインダー" Height="211" Width="454" Loaded="Window_Loaded" Closed="Window_Closed">
+
+    <Window.DataContext>
+        <local:ReminderViewModel/>
+    </Window.DataContext>
+    <StackPanel>
+        <Grid Margin="10,10,10,0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+
+            <TextBlock Grid.Column="0" TextWrapping="Wrap" Text="次回ふれあい時刻:" VerticalAlignment="Center" HorizontalAlignment="Center" />
+            <TextBlock Grid.Column="1" TextWrapping="Wrap" Text="{Binding DisplayNextTouchTime}" VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="24">
+                <TextBlock.Style>
+                    <Style TargetType="TextBlock">
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding IsTimerRunning}" Value="false">
+                                <Setter Property="Foreground" Value="{DynamicResource MaterialDesign.Brush.Secondary}"/>
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </TextBlock.Style>
+            </TextBlock>
+            <TextBlock Grid.Column="2" TextWrapping="Wrap" Text="{Binding StatusText}" VerticalAlignment="Center" HorizontalAlignment="Center">
+                <TextBlock.Style>
+                    <Style TargetType="TextBlock">
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding IsTimerRunning}" Value="false">
+                                <Setter Property="Foreground" Value="{DynamicResource MaterialDesign.Brush.Secondary}"/>
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </TextBlock.Style>
+            </TextBlock>
+        </Grid>
+
+        <StackPanel Orientation="Horizontal" Margin="10">
+            <Button Content="今！" HorizontalAlignment="Center" Command="{Binding SetNowCommand}" />
+            <materialDesign:TimePicker
+            x:Name="SecTimePicker"
+            Width="180"
+            FontSize="20"
+            materialDesign:HintAssist.Hint="最終ふれあい時刻"
+            Is24Hours="True"
+            WithSeconds="True"
+            HorizontalContentAlignment="Center"
+            Text="{Binding InputLastTouchTime, Mode=Default}"
+            Margin="10"
+        />
+            <Button Content="セット" HorizontalAlignment="Center" Command="{Binding SetInputCommand}" />
+        </StackPanel>
+
+        <Button Content="システムトレイに格納" HorizontalAlignment="Center" Margin="10" Command="{Binding StoreToSystemTrayCommand}" />
+
+    </StackPanel>
+</Window>
